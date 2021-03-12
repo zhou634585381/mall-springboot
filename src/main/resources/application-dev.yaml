@@ -1,0 +1,27 @@
+#开发环境配置
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 6000ms  # 连接超时时长（毫秒）
+    jedis:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+  activiti:
+    check-process-definitions: false
+  # spirng 缓存管理参数配置
+  cache:
+    redis:
+      time-to-live: 86400000
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true  #启用表单REST风格
+    contentnegotiation:
+      favor-parameter: true  #开启请求参数内容协商
+mybatis-plus:
+  mapper-locations: classpath:/mappers/mall/*.xml
