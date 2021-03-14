@@ -23,5 +23,6 @@ spring:
         enabled: true  #启用表单REST风格
     contentnegotiation:
       favor-parameter: true  #开启请求参数内容协商
-mybatis-plus:
-  mapper-locations: classpath:/mappers/mall/*.xml
+#mybatis-plus:
+#  mapper-locations: classpath:mappers/*.xml
+#  type-aliases-package: com.example.mall.entity
