@@ -2,4 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mall.mapper.CollectMapper">
 
+    <resultMap id="productMap" type="com.example.mall.entity.Product">
+        <result column="product_id" property="productId" jdbcType="INTEGER"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="product_title" property="productTitle" jdbcType="VARCHAR"/>
+        <result column="product_intro" property="productIntro" jdbcType="VARCHAR"/>
+        <result column="product_picture" property="productPicture" jdbcType="VARCHAR"/>
+        <result column="product_price" property="productPrice" jdbcType="DOUBLE"/>
+        <result column="product_selling_price" property="productSellingPrice" jdbcType="DOUBLE"/>
+        <result column="product_num" property="productNum" jdbcType="INTEGER"/>
+        <result column="product_sales" property="productSales" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getCollect" resultMap="productMap">
+    SELECT
+    product.product_id,
+    product.product_name,
+    product.category_id,
+    product.product_title,
+    product.product_intro,
+    product.product_picture,
+    product.product_price,
+    product.product_selling_price,
+    product.product_num,
+    product.product_sales
+    FROM
+    collect,product
+    WHERE
+    collect.user_id = #{userId}
+    AND
+    collect.product_id = product.product_id
+    </select>
 </mapper>
