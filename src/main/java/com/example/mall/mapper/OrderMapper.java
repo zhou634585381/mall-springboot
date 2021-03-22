@@ -2,6 +2,9 @@ package com.example.mall.mapper;
 
 import com.example.mall.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.mall.entity.vo.OrderVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-03-12
  */
 public interface OrderMapper extends BaseMapper<Order> {
-
+    /**
+     * 获取订单用户id
+     * @param userId
+     * @return
+     */
+    List<OrderVo> getUserId(Integer userId);
 }
