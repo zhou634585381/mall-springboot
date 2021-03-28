@@ -16,20 +16,16 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SeckillProduct implements Serializable {
+public class DiscountTime implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "seckill_id", type = IdType.AUTO)
-    private Integer seckillId;
-
-    private Integer productId;
-
-    private Double seckillPrice;
-
-    private Integer seckillStock;
-
+    @TableId(value = "time_id", type = IdType.AUTO)
     private Integer timeId;
+
+    private Long startTime;
+
+    private Long endTime;
 
 
 }

@@ -3,7 +3,7 @@ package com.example.mall.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mall.entity.Order;
 import com.example.mall.entity.Product;
-import com.example.mall.entity.SeckillProduct;
+import com.example.mall.entity.DiscountProduct;
 import com.example.mall.entity.ShoppingCart;
 import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.OrderVo;
@@ -11,7 +11,7 @@ import com.example.mall.exception.ExceptionEnum;
 import com.example.mall.exception.MallException;
 import com.example.mall.mapper.OrderMapper;
 import com.example.mall.mapper.ProductMapper;
-import com.example.mall.mapper.SeckillProductMapper;
+import com.example.mall.mapper.DiscountProductMapper;
 import com.example.mall.mapper.ShoppingCartMapper;
 import com.example.mall.service.IOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,7 +22,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.geom.QuadCurve2D;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +44,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
-    private SeckillProductMapper seckillProductMapper;
+    private DiscountProductMapper seckillProductMapper;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -113,18 +112,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void addSeckillOrder(String seckillId, String userId){
+    public void addSeckillOrder(String discountId, String userId){
         // 订单id
         String orderId = idWorker.nextId() + "";
         // 商品id
-        SeckillProduct seckillProduct = new SeckillProduct();
-        seckillProduct.setSeckillId(Integer.parseInt(seckillId));
-        QueryWrapper<SeckillProduct> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("seckill_id",seckillId);
-        SeckillProduct one = seckillProductMapper.selectOne(queryWrapper);
+        DiscountProduct seckillProduct = new DiscountProduct();
+        seckillProduct.setDiscountId(Integer.parseInt(discountId));
+        QueryWrapper<DiscountProduct> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("seckill_id",discountId);
+        DiscountProduct one = seckillProductMapper.selectOne(queryWrapper);
         Integer productId = one.getProductId();
         // 秒杀价格
-        Double price = one.getSeckillPrice();
+        Double price = one.getDiscountPrice();
 
         // 订单封装
         Order order = new Order();
@@ -138,14 +137,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         try {
             orderMapper.insert(order);
             // 减库存
-            seckillProductMapper.decrStock(one.getSeckillId());
+            seckillProductMapper.decrStock(one.getDiscountId());
         } catch (Exception e) {
             e.printStackTrace();
             throw new MallException(ExceptionEnum.ADD_ORDER_ERROR);
         }
 
         // 订单创建成功, 将用户写入redis, 防止多次抢购
-        redisTemplate.opsForList().leftPush(SECKILL_PRODUCT_USER_LIST + seckillId, userId);
+        redisTemplate.opsForList().leftPush(SECKILL_PRODUCT_USER_LIST + discountId, userId);
 
     }
 }

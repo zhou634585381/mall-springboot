@@ -1,11 +1,13 @@
 package com.example.mall.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
-
+@Component
 public class BeanUtil {
 
     /**

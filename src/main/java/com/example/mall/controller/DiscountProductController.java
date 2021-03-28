@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-03-12
  */
 @RestController
-@RequestMapping("/mall/seckill-time")
-public class SeckillTimeController {
+@RequestMapping("/mall/seckill-product")
+public class DiscountProductController {
 
 }

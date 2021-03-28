@@ -4,6 +4,7 @@ import com.example.mall.entity.Collect;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mall.entity.Product;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @author 周瑜
  * @since 2021-03-12
  */
+@Component
 public interface CollectMapper extends BaseMapper<Collect> {
     /**
      * 查询收藏商品信息

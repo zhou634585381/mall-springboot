@@ -1,6 +1,6 @@
 package com.example.mall.service;
 
-import com.example.mall.entity.SeckillProduct;
+import com.example.mall.entity.DiscountProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author 周瑜
  * @since 2021-03-12
  */
-public interface ISeckillProductService extends IService<SeckillProduct> {
+public interface IDiscountProductService extends IService<DiscountProduct> {
 
 }

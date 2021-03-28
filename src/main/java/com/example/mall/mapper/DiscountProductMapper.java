@@ -1,6 +1,6 @@
 package com.example.mall.mapper;
 
-import com.example.mall.entity.Product;
+import com.example.mall.entity.DiscountProduct;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
  * @since 2021-03-12
  */
 @Component
-public interface ProductMapper extends BaseMapper<Product> {
-
+public interface DiscountProductMapper extends BaseMapper<DiscountProduct> {
+    /**
+     * 减少库存
+     * @param discountId
+     */
+    void decrStock(Integer discountId);
 }
