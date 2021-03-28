@@ -1,6 +1,8 @@
 package com.example.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mall.entity.Product;
 import com.example.mall.exception.ExceptionEnum;
 import com.example.mall.exception.MallException;
@@ -25,6 +27,8 @@ import java.util.List;
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
     @Autowired
     private ProductMapper productMapper;
+
+    private final static Integer SELECT_ALL = 0;
 
     @Override
     public List<Product> getProductByCategoryId(Integer categoryId){
@@ -61,4 +65,30 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     }
 
+    @Override
+    public Product getProductById(Integer productId){
+        Product product = null;
+        try {
+            product = productMapper.selectById(productId);
+            if (product == null) {
+                throw new MallException(ExceptionEnum.GET_PRODUCT_NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new MallException(ExceptionEnum.GET_PRODUCT_ERROR);
+        }
+        return product;
+    }
+
+    @Override
+    public IPage<Product> getProductByPage(Integer pageNum, Integer pageSize,Integer categoryId){
+        Page<Product> productPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select().orderByDesc("product_sales");
+        if (!SELECT_ALL.equals(categoryId)) {
+            queryWrapper.eq("category_id", categoryId);
+        }
+        IPage<Product> iPage = productMapper.selectPage(productPage,queryWrapper);
+        return iPage;
+    }
 }

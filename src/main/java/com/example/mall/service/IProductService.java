@@ -1,5 +1,5 @@
 package com.example.mall.service;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.mall.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -27,4 +27,19 @@ public interface IProductService extends IService<Product> {
      */
     List<Product> getHotProduct();
 
+    /**
+     * 根据商品id获取商品信息
+     * @param productId
+     * @return
+     */
+    Product getProductById(Integer productId);
+
+    /**
+     * 分页获取商品信息
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
+    IPage<Product> getProductByPage(Integer pageNum, Integer pageSize,Integer categoryId);
 }
