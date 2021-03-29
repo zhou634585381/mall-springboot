@@ -24,12 +24,12 @@ public class Users implements Serializable {
     @TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
 
-    @TableField("userName")
+    @TableField("user_name")
     private String userName;
 
     private String password;
 
-    @TableField("userPhoneNumber")
+    @TableField("user_phone_number")
     private String userPhoneNumber;
 
 

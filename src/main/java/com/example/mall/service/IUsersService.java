@@ -12,5 +12,22 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-03-12
  */
 public interface IUsersService extends IService<Users> {
+    /**
+     * 登录
+     * @param users
+     * @return
+     */
+    Users login(Users users);
 
+    /**
+     * 注册
+     * @param users
+     */
+    void register(Users users);
+
+    /**
+     * 用户名是否存在
+     * @param username
+     */
+    void isUserName(String username);
 }
