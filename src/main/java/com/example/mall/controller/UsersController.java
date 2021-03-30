@@ -7,6 +7,8 @@ import com.example.mall.utils.BeanUtil;
 import com.example.mall.utils.CookieUtil;
 import com.example.mall.utils.MD5Util;
 import com.example.mall.utils.ResultMessage;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/mall/users")
 @Slf4j
+@Api(tags = "用户登录注册")
 public class UsersController {
     @Autowired
     private UsersServiceImpl usersService;
@@ -36,6 +39,7 @@ public class UsersController {
     private ResultMessage resultMessage;
 
     @PostMapping("/login")
+    @ApiOperation(value = "登录")
     public ResultMessage login(@RequestBody Users users, HttpServletRequest request, HttpServletResponse response) {
         users = usersService.login(users);
         String encode = MD5Util.MD5Encode(users.getUserName() + users.getPassword(), "UTF-8");
@@ -56,18 +60,15 @@ public class UsersController {
 
 
     @PostMapping("/register")
+    @ApiOperation(value = "注册")
     public ResultMessage register(@RequestBody Users users) {
         usersService.register(users);
         resultMessage.success("001", "注册成功");
         return resultMessage;
     }
 
-    /**
-     * 判断用户名是否已存在
-     * @param username
-     * @return
-     */
     @GetMapping("/username")
+    @ApiOperation(value = "判断用户名是否已存在")
     public ResultMessage username(String username) {
         usersService.isUserName(username);
         resultMessage.success("001", "可注册");
