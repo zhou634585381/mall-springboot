@@ -7,6 +7,7 @@ import com.example.mall.utils.BeanUtil;
 import com.example.mall.utils.CookieUtil;
 import com.example.mall.utils.MD5Util;
 import com.example.mall.utils.ResultMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/mall/users")
+@Slf4j
 public class UsersController {
     @Autowired
     private UsersServiceImpl usersService;
@@ -39,6 +41,7 @@ public class UsersController {
         String encode = MD5Util.MD5Encode(users.getUserName() + users.getPassword(), "UTF-8");
         encode += "|" + users.getUserId() + "|" + users.getUserName() + "|";
         CookieUtil.setCookie(request, response, "XM_TOKEN", encode, 1800);
+        log.info(encode);
         try {
             redisTemplate.opsForHash().putAll(encode, BeanUtil.bean2map(users));
             redisTemplate.expire(encode, 30 * 60, TimeUnit.SECONDS);

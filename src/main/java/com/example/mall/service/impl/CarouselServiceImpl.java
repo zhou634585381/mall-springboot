@@ -9,6 +9,7 @@ import com.example.mall.service.ICarouselService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
     private CarouselMapper carouselMapper;
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<Carousel> getCarouselList() {
         List<Carousel> list = null;
         try {

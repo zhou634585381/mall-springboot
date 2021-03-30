@@ -9,8 +9,8 @@ import com.example.mall.service.IUsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mall.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     private UsersMapper usersMapper;
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public Users login(Users users) {
         users.setPassword(MD5Util.MD5Encode(users.getPassword() + "", "UTF-8"));
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
@@ -40,6 +41,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void register(Users users) {
         // 先去看看用户名是否重复
         if (getUsersByName(users.getUserName()) != null) {
@@ -68,6 +70,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void isUserName(String username) {
         // 先去看看用户名是否重复
         if (getUsersByName(username) != null) {

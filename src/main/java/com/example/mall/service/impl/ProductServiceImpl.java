@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private final static Integer SELECT_ALL = 0;
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<Product> getProductByCategoryId(Integer categoryId){
         List<Product> list = null;
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
@@ -48,6 +50,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return list;
     }
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<Product> getHotProduct(){
         List<Product> list = null;
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
@@ -66,6 +69,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public Product getProductById(Integer productId){
         Product product = null;
         try {
@@ -81,6 +85,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public IPage<Product> getProductByPage(Integer pageNum, Integer pageSize,Integer categoryId){
         Page<Product> productPage = new Page<>(pageNum,pageSize);
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();

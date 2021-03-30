@@ -91,6 +91,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
     }
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<List<OrderVo>> getOrder(Integer userId) {
         List<OrderVo> list = null;
         ArrayList<List<OrderVo>> ret = new ArrayList<>();

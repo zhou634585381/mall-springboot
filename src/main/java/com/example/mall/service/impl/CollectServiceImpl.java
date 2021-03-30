@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ public class CollectServiceImpl extends ServiceImpl<CollectMapper, Collect> impl
     CollectMapper collectMapper;
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void addCollect(Integer userId, Integer productId){
         Collect collect = new Collect();
         collect.setUserId(userId);

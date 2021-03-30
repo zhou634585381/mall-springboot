@@ -8,6 +8,7 @@ import com.example.mall.service.ICategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     CategoryMapper categoryMapper;
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<Category> getCategoryAll(){
         List<Category> categories = null;
         try {
