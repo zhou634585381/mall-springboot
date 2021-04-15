@@ -44,7 +44,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
-    private DiscountProductMapper seckillProductMapper;
+    private DiscountProductMapper discountProductMapper;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -113,15 +113,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void addSeckillOrder(String discountId, String userId){
+    public void addDiscountOrder(Integer discountId, Integer userId){
         // 订单id
         String orderId = idWorker.nextId() + "";
         // 商品id
-        DiscountProduct seckillProduct = new DiscountProduct();
-        seckillProduct.setDiscountId(Integer.parseInt(discountId));
+        DiscountProduct discountProduct = new DiscountProduct();
+        discountProduct.setDiscountId(discountId);
         QueryWrapper<DiscountProduct> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("seckill_id",discountId);
-        DiscountProduct one = seckillProductMapper.selectOne(queryWrapper);
+        queryWrapper.eq("discount_id",discountId);
+        DiscountProduct one = discountProductMapper.selectOne(queryWrapper);
         Integer productId = one.getProductId();
         // 秒杀价格
         Double price = one.getDiscountPrice();
@@ -131,14 +131,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setOrderId(orderId);
         order.setProductId(productId);
         order.setProductNum(1);
-        order.setUserId(Integer.parseInt(userId));
+        order.setUserId(userId);
         order.setOrderTime(System.currentTimeMillis());
         order.setProductPrice(price);
 
         try {
             orderMapper.insert(order);
             // 减库存
-            seckillProductMapper.decrStock(one.getDiscountId());
+            discountProductMapper.decrStock(one.getDiscountId());
         } catch (Exception e) {
             e.printStackTrace();
             throw new MallException(ExceptionEnum.ADD_ORDER_ERROR);

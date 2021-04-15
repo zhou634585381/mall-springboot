@@ -32,8 +32,8 @@ public interface IOrderService extends IService<Order> {
 
     /**
      * 添加折扣商品订单
-     * @param seckillId
+     * @param discountId
      * @param userId
      */
-    void addSeckillOrder(String seckillId, String userId);
+    void addDiscountOrder(Integer discountId, Integer userId);
 }

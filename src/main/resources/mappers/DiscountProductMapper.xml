@@ -2,10 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mall.mapper.DiscountProductMapper">
 
+    <resultMap id="DiscountProductMap" type="com.example.mall.entity.vo.DiscountProductVo">
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="product_price" property="productPrice" jdbcType="INTEGER"/>
+        <result column="product_picture" property="productPicture" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="BIGINT"/>
+        <result column="end_time" property="endTime" jdbcType="BIGINT"/>
+    </resultMap>
     <update id="decrStock">
     UPDATE discount_product
     SET discount_stock = discount_stock - 1
     WHERE discount_id = #{discountId}
     AND discount_stock > 0
     </update>
+    
+    <select id="getDiscountProductVos" resultMap="DiscountProductMap">
+        SELECT discount_time.start_time, discount_time.end_time, discount_product.*, product.product_name, product.product_price, product.product_picture
+        FROM discount_product ,product, discount_time
+        WHERE discount_product.time_id = discount_time.time_id
+        AND discount_product.product_id = product.product_id
+        AND discount_product.time_id = #{timeId}
+        AND discount_time.end_time > #{time}
+    </select>
+
+    <select id="getDiscount" resultMap="DiscountProductMap">
+        SELECT discount_time.start_time, discount_time.end_time, discount_time.*, product.product_name, product.product_price, product.product_picture
+        FROM discount_product ,product, discount_time
+        WHERE discount_product.time_id = discount_time.time_id
+        AND discount_product.product_id = product.product_id
+        AND discount_product.discount_id = #{discountId}
+    </select>
 </mapper>

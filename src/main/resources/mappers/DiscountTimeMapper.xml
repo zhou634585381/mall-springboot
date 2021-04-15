@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mall.mapper.DiscountTimeMapper">
+    <resultMap id="DiscountTimeMap" type="com.example.mall.entity.DiscountTime">
+        <result column="time_id" property="timeId" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="BIGINT"/>
+        <result column="end_time" property="endTime" jdbcType="BIGINT"/>
+    </resultMap>
+    <select id="getTime" resultMap="DiscountTimeMap">
+        SELECT
+        discount_time.start_time, discount_time.end_time,discount_time.time_id
+        FROM discount_time
+        WHERE end_time > #{time} limit 6
+    </select>
 
+    <select id="getEndTime" resultType="java.lang.Long">
+        SELECT discount_time.end_time
+        FROM discount_time
+        WHERE time_id = #{timeId}
+    </select>
 </mapper>

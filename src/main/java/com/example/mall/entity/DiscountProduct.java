@@ -20,7 +20,7 @@ public class DiscountProduct implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "seckill_id", type = IdType.AUTO)
+    @TableId(value = "discount_id", type = IdType.AUTO)
     private Integer discountId;
 
     private Integer productId;
