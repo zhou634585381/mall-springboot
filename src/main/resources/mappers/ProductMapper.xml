@@ -5,7 +5,41 @@
     <resultMap id="ProductIdsMap" type="com.example.mall.entity.Product">
         <result column="product_id" property="productId" jdbcType="INTEGER"></result>
     </resultMap>
+    <resultMap id="ProductMap" type="com.example.mall.entity.Product">
+        <result column="product_id" property="productId" jdbcType="INTEGER"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="product_title" property="productTitle" jdbcType="VARCHAR"/>
+        <result column="product_intro" property="productIntro" jdbcType="VARCHAR"/>
+        <result column="product_picture" property="productPicture" jdbcType="VARCHAR"/>
+        <result column="product_price" property="productPrice" jdbcType="BIGINT"/>
+        <result column="product_selling_price" property="productSellingPrice" jdbcType="BIGINT"/>
+        <result column="product_num" property="productNum" jdbcType="INTEGER"/>
+        <result column="product_sales" property="productSales" jdbcType="INTEGER"/>
+    </resultMap>
     <select id="selectIds" resultMap="ProductIdsMap">
         SELECT product_id FROM product
+    </select>
+
+     <select id="selectAll" resultMap="ProductMap">
+        SELECT
+        *
+        FROM
+        product
+     </select>
+
+    <select id="getProductBySearch" resultMap="ProductMap">
+        SELECT *
+        FROM product
+        WHERE product_name
+        LIKE '%${search}%'
+        OR product_title LIKE '%${search}%' OR product_intro LIKE '%${search}%'
+    </select>
+
+    <select id="getProductByCategory" resultMap="ProductMap">
+        SELECT *
+        FROM product
+        WHERE category_id=#{categoryID}
+        ORDER BY product_sales DESC limit #{currentPage},#{pageSize}
     </select>
 </mapper>

@@ -21,4 +21,19 @@ public interface ProductMapper extends BaseMapper<Product> {
      * @return
      */
     List<Integer> selectIds();
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List<Product> selectAll();
+
+    /**
+     * 条件查询
+     * @param search
+     * @return
+     */
+    List<Product> getProductBySearch(String search);
+
+    List<Product> getProductByCategory(int categoryID, int currentPage, int pageSize);
 }

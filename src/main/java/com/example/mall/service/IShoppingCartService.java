@@ -32,15 +32,16 @@ public interface IShoppingCartService extends IService<ShoppingCart> {
 
     /**
      * 更改购物车某件商品数量
-     * @param productId
+     * @param Id
      * @param userId
      * @param num
      */
-    void updateCartNum(Integer productId, Integer userId, Integer num);
+    void updateCartNum(Integer Id, Integer userId, Integer num);
 
     /**
      * 删除购物车商品
-     * @param Id
+     * @param cartId
+     * @param userId
      */
-    void deleteCart(Integer Id);
+    void deleteCart(Integer cartId, Integer userId);
 }

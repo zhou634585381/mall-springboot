@@ -1,7 +1,7 @@
 package com.example.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.mall.entity.Order;
+import com.example.mall.entity.Orders;
 import com.example.mall.entity.Product;
 import com.example.mall.entity.DiscountProduct;
 import com.example.mall.entity.ShoppingCart;
@@ -9,7 +9,7 @@ import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.OrderVo;
 import com.example.mall.exception.ExceptionEnum;
 import com.example.mall.exception.MallException;
-import com.example.mall.mapper.OrderMapper;
+import com.example.mall.mapper.OrdersMapper;
 import com.example.mall.mapper.ProductMapper;
 import com.example.mall.mapper.DiscountProductMapper;
 import com.example.mall.mapper.ShoppingCartMapper;
@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
  * @since 2021-03-12
  */
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService {
+public class OrderServiceImpl extends ServiceImpl<OrdersMapper, Orders> implements IOrderService {
     @Autowired
     private IdWorker idWorker;
     @Autowired
-    private OrderMapper orderMapper;
+    private OrdersMapper orderMapper;
     @Autowired
     private ProductMapper productMapper;
     @Autowired
@@ -48,7 +48,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private final static String SECKILL_PRODUCT_USER_LIST = "seckill:product:user:list";
+    private final static String DISCOUNT_PRODUCT_USER_LIST = "discount:product:user:list";
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
@@ -56,15 +56,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         String orderId = idWorker.nextId() + "";
         Long time = System.currentTimeMillis();
         for (CartVo cartVo : cartVoList){
-            Order order = new Order();
+            Orders order = new Orders();
             order.setOrderId(orderId);
-            order.setOrderTime(time);
-            order.setProductNum(cartVo.getNum());
-            order.setProductId(cartVo.getProductId());
-            order.setProductPrice(cartVo.getPrice());
             order.setUserId(userId);
+            order.setProductId(cartVo.getProductId());
+            order.setProductNum(cartVo.getNum());
+            order.setProductPrice(cartVo.getPrice());
+            order.setOrderTime(time);
             try {
-                orderMapper.insert(order);
+            orderMapper.insert(order);
             }catch (Exception e){
                 e.printStackTrace();
                 throw new MallException(ExceptionEnum.ADD_ORDER_ERROR);
@@ -101,7 +101,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 throw new MallException(ExceptionEnum.GET_ORDER_NOT_FOUND);
             }
             // 将同一个订单放在一组
-            Map<String, List<OrderVo>> collect = list.stream().collect(Collectors.groupingBy(Order::getOrderId));
+            Map<String, List<OrderVo>> collect = list.stream().collect(Collectors.groupingBy(OrderVo::getOrderId));
             Collection<List<OrderVo>> values = collect.values();
             ret.addAll(values);
         } catch (MallException e) {
@@ -127,7 +127,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Double price = one.getDiscountPrice();
 
         // 订单封装
-        Order order = new Order();
+        Orders order = new Orders();
         order.setOrderId(orderId);
         order.setProductId(productId);
         order.setProductNum(1);
@@ -145,7 +145,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
 
         // 订单创建成功, 将用户写入redis, 防止多次抢购
-        redisTemplate.opsForList().leftPush(SECKILL_PRODUCT_USER_LIST + discountId, userId);
+        redisTemplate.opsForList().leftPush(DISCOUNT_PRODUCT_USER_LIST + discountId, userId);
 
     }
 }

@@ -2,6 +2,7 @@ package com.example.mall.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.mall.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -41,5 +42,14 @@ public interface IProductService extends IService<Product> {
      * @param categoryId
      * @return
      */
-    IPage<Product> getProductByPage(Integer pageNum, Integer pageSize,Integer categoryId);
+    PageInfo<Product> getProductByPage(Integer pageNum, Integer pageSize, Integer categoryId);
+
+    /**
+     * 搜索查询
+     * @param search
+     * @return
+     */
+    List<Product> getProductBySearch(String search);
+
+    List<Product> getProductByCategory(int categoryID,int currentPage,int pageSize);
 }

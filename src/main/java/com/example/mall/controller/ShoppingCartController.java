@@ -29,17 +29,17 @@ public class ShoppingCartController {
     private ShoppingCartServiceImpl shoppingCartService;
 
 
-    @GetMapping("/getCartByUserId")
+    @GetMapping("/getCartByUserId/{userId}")
     @ApiOperation(value = "获取用户购物车信息")
-    public ResultMessage getCartByUserId(Integer userId) {
+    public ResultMessage getCartByUserId(@PathVariable Integer userId) {
         List<CartVo> carts = shoppingCartService.getCartByUserId(userId);
         resultMessage.success("001", carts);
         return resultMessage;
     }
 
-    @GetMapping("/addShoppingCart")
+    @GetMapping("/addShoppingCart/{productId}/{userId}")
     @ApiOperation(value = "添加购物车")
-    public ResultMessage addShoppingCart(Integer productId,Integer userId) {
+    public ResultMessage addShoppingCart(@PathVariable Integer productId,@PathVariable Integer userId) {
         CartVo cartVo = shoppingCartService.addShoppingCart(productId, userId);
         if (cartVo != null) {
             resultMessage.success("001", "添加购物车成功", cartVo);
@@ -49,18 +49,18 @@ public class ShoppingCartController {
         return resultMessage;
     }
 
-    @PutMapping("/updateCartNum")
+    @GetMapping("/updateCartNum/{productId}/{userId}/{num}")
     @ApiOperation(value = "修改购买商品数量")
-    public ResultMessage updateCartNum(Integer productId, Integer userId, Integer num) {
+    public ResultMessage updateCartNum(@PathVariable Integer productId,@PathVariable Integer userId,@PathVariable Integer num) {
         shoppingCartService.updateCartNum(productId, userId, num);
         resultMessage.success("001", "更新成功");
         return resultMessage;
     }
 
-    @DeleteMapping("/deleteCart")
+    @DeleteMapping("/deleteCart/{cartId}/{userId}")
     @ApiOperation(value = "删除购物车")
-    public ResultMessage deleteCart(Integer Id) {
-        shoppingCartService.deleteCart(Id);
+    public ResultMessage deleteCart(@PathVariable Integer cartId,@PathVariable Integer userId) {
+        shoppingCartService.deleteCart(cartId,userId);
         resultMessage.success("001", "删除成功");
         return resultMessage;
     }

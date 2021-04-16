@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mall.mapper.OrderMapper">
-    <resultMap id="OrderMap" type="com.example.mall.entity.Order">
+<mapper namespace="com.example.mall.mapper.OrdersMapper">
+    <resultMap id="OrdersMap" type="com.example.mall.entity.vo.OrderVo">
         <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="product_id" property="productId" jdbcType="INTEGER"/>
@@ -9,10 +9,12 @@
         <result column="product_price" property="productPrice" jdbcType="DOUBLE"/>
         <result column="order_time" property="orderTime" jdbcType="BIGINT"/>
     </resultMap>
-    <select id="getUserId" resultMap="OrderMap">
-    SELECT `order`.*, product.product_name AS productName, product.product_picture AS productPicture
-    FROM `order`, product
-    WHERE `order`.product_id = product.product_id
-    AND `order`.user_id = #{userId}
+    <select id="getUserId" resultMap="OrdersMap">
+    SELECT
+    orders.order_id,orders.user_id,orders.product_id,orders.product_num,orders.product_price,orders.order_time,
+    product.product_name ,product.product_picture
+    FROM orders, product
+    WHERE orders.product_id = product.product_id
+    AND orders.user_id = #{userId}
     </select>
 </mapper>

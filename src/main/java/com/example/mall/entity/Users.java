@@ -29,8 +29,4 @@ public class Users implements Serializable {
 
     private String password;
 
-    @TableField("user_phone_number")
-    private String userPhoneNumber;
-
-
 }

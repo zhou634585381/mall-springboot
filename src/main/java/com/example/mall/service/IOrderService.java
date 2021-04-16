@@ -1,6 +1,6 @@
 package com.example.mall.service;
 
-import com.example.mall.entity.Order;
+import com.example.mall.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.OrderVo;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author 周瑜
  * @since 2021-03-12
  */
-public interface IOrderService extends IService<Order> {
+public interface IOrderService extends IService<Orders> {
     /**
      * 添加订单
      * @param cartVoList

@@ -1,6 +1,6 @@
 package com.example.mall.mapper;
 
-import com.example.mall.entity.Order;
+import com.example.mall.entity.Orders;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mall.entity.vo.OrderVo;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.List;
  * @since 2021-03-12
  */
 @Component
-public interface OrderMapper extends BaseMapper<Order> {
+public interface OrdersMapper extends BaseMapper<Orders> {
     /**
      * 获取订单用户id
      * @param userId

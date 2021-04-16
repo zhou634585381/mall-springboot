@@ -30,24 +30,24 @@ public class CollectController {
     private CollectServiceImpl collectService;
 
     @ApiOperation(value = "添加收藏商品")
-    @GetMapping("/addCollect")
-    public ResultMessage addCollect(Integer userId,Integer productId) {
+    @GetMapping("/addCollect/{productId}/{userId}")
+    public ResultMessage addCollect(@PathVariable Integer userId,@PathVariable Integer productId) {
         collectService.addCollect(userId, productId);
         resultMessage.success("001", "商品收藏成功");
         return resultMessage;
     }
 
     @ApiOperation(value = "获取用户收藏商品信息")
-    @GetMapping("/getCollect/")
-    public ResultMessage getCollect(Integer userId) {
+    @GetMapping("/getCollect/{userId}")
+    public ResultMessage getCollect(@PathVariable Integer userId) {
         List<Product> collects = collectService.getCollect(userId);
         resultMessage.success("001", collects);
         return resultMessage;
     }
 
     @ApiOperation(value = "删除收藏商品")
-    @DeleteMapping("/deleteCollect")
-    public ResultMessage deleteCollect(Integer productId,Integer userId) {
+    @DeleteMapping("/deleteCollect/{productId}/{userId}")
+    public ResultMessage deleteCollect(@PathVariable Integer productId,@PathVariable Integer userId) {
         collectService.deleteCollect(userId, productId);
         resultMessage.success("001", "删除收藏成功");
         return resultMessage;

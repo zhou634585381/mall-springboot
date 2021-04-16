@@ -6,6 +6,8 @@ import com.example.mall.entity.DiscountTime;
 import com.example.mall.entity.vo.DiscountProductVo;
 import com.example.mall.service.impl.DiscountProductServiceImpl;
 import com.example.mall.utils.ResultMessage;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/mall/discount")
+@Api(tags = "商品打折")
 public class DiscountProductController {
     @Autowired
     private ResultMessage resultMessage;
@@ -30,11 +33,8 @@ public class DiscountProductController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    /**
-     * 根据时间id获取对应时间的秒杀商品列表
-     * @param timeId
-     * @return
-     */
+
+    @ApiOperation(value = "根据时间id获取对应时间的秒杀商品列表")
     @GetMapping("/getProduct")
     public ResultMessage getProduct(Integer timeId) {
         List<DiscountProductVo> seckillProductVos = discountProductService.getProduct(timeId);
@@ -42,11 +42,8 @@ public class DiscountProductController {
         return resultMessage;
     }
 
-    /**
-     * 添加打折商品
-     * @param discountProduct
-     * @return
-     */
+
+    @ApiOperation(value = "添加打折商品")
     @PostMapping("/addDiscountProduct")
     public ResultMessage addDiscountProduct(@RequestBody DiscountProduct discountProduct) {
         discountProductService.addDiscountProduct(discountProduct);
@@ -54,10 +51,8 @@ public class DiscountProductController {
         return resultMessage;
     }
 
-    /**
-     * 获取时间段
-     * @return
-     */
+
+    @ApiOperation(value = "获取时间段")
     @GetMapping("/time")
     public ResultMessage getTime() {
         List<DiscountTime> discountTimes = discountProductService.getTime();
@@ -65,22 +60,16 @@ public class DiscountProductController {
         return resultMessage;
     }
 
-    /**
-     * 获取打折商品
-     * @param discountId
-     * @return
-     */
-    @GetMapping("/getDiscount")
-    public ResultMessage getDiscount(Integer discountId) {
+
+    @ApiOperation(value = "获取打折商品")
+    @GetMapping("/getDiscount/{discountId}")
+    public ResultMessage getDiscount(@PathVariable Integer discountId) {
         DiscountProductVo discountProductVo = discountProductService.getDiscount(discountId);
         resultMessage.success("001", discountProductVo);
         return resultMessage;
     }
-    /**
-     * 开始打折
-     * @param discountId
-     * @return
-     */
+
+    @ApiOperation(value = "开始打折")
     @PostMapping("/discountProduct")
     public ResultMessage discountProduct(String discountId, @CookieValue("XM_TOKEN") String cookie) {
         // 先判断cookie是否存在，和redis校验

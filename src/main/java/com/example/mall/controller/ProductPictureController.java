@@ -33,8 +33,8 @@ public class ProductPictureController {
     private ResultMessage resultMessage;
 
     @ApiOperation(value = "获取商品图片")
-    @GetMapping("/productPicture")
-    public ResultMessage productPicture(Integer productId) {
+    @GetMapping("/productPicture/{productId}")
+    public ResultMessage productPicture(@PathVariable Integer productId) {
         List<ProductPicture> products = productPictureService.getProductPictureByProductId(productId);
         resultMessage.success("001", products);
         return resultMessage;

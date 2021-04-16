@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,6 +73,25 @@ public class UsersController {
     public ResultMessage username(String username) {
         usersService.isUserName(username);
         resultMessage.success("001", "可注册");
+        return resultMessage;
+    }
+
+    @ApiOperation(value = "根据token获取用户信息")
+    @GetMapping("/token")
+    public ResultMessage token(@CookieValue("XM_TOKEN") String token, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map map = redisTemplate.opsForHash().entries(token);
+        // 可能map为空 ， 即redis中时间已过期，但是cookie还存在。
+        // 这个时候应该删除cookie，让用户重新登录
+        if (map.isEmpty()) {
+            CookieUtil.delCookie(request, token);
+            resultMessage.fail("002", "账号过期,请重新登录");
+            return resultMessage;
+        }
+        // 设置过期时间
+        redisTemplate.expire(token, 30 * 60, TimeUnit.SECONDS);
+        Users users = BeanUtil.map2bean(map, Users.class);
+        users.setPassword(null);
+        resultMessage.success("001", users);
         return resultMessage;
     }
 }

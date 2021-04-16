@@ -24,5 +24,4 @@ public class Collect implements Serializable {
 
     private Long collectTime;
 
-
 }

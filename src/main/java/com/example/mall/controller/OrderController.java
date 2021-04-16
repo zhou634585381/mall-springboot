@@ -3,7 +3,6 @@ package com.example.mall.controller;
 
 import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.OrderVo;
-import com.example.mall.mapper.OrderMapper;
 import com.example.mall.service.impl.OrderServiceImpl;
 import com.example.mall.utils.ResultMessage;
 import io.swagger.annotations.Api;
