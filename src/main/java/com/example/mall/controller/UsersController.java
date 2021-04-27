@@ -43,13 +43,15 @@ public class UsersController {
     @ApiOperation(value = "登录")
     public ResultMessage login(@RequestBody Users users, HttpServletRequest request, HttpServletResponse response) {
         users = usersService.login(users);
+        // 添加cookie，设置唯一认证
         String encode = MD5Util.MD5Encode(users.getUserName() + users.getPassword(), "UTF-8");
         encode += "|" + users.getUserId() + "|" + users.getUserName() + "|";
         CookieUtil.setCookie(request, response, "XM_TOKEN", encode, 1800);
         log.info(encode);
+        // 将encode放入redis中，用于认证
         try {
             redisTemplate.opsForHash().putAll(encode, BeanUtil.bean2map(users));
-            redisTemplate.expire(encode, 30 * 60, TimeUnit.SECONDS);
+            redisTemplate.expire(encode, 30 * 60 * 60, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +90,7 @@ public class UsersController {
             return resultMessage;
         }
         // 设置过期时间
-        redisTemplate.expire(token, 30 * 60, TimeUnit.SECONDS);
+        redisTemplate.expire(token, 30 * 60 * 60, TimeUnit.SECONDS);
         Users users = BeanUtil.map2bean(map, Users.class);
         users.setPassword(null);
         resultMessage.success("001", users);

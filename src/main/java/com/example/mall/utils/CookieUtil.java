@@ -139,7 +139,7 @@ public final class CookieUtil {
             }
             if (null != request)// 设置域名的cookie
             {
-                cookie.setDomain(getDomainName(request));
+                cookie.setDomain("localhost");
             }
             cookie.setPath("/");
 

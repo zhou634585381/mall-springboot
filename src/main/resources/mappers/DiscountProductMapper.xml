@@ -3,9 +3,12 @@
 <mapper namespace="com.example.mall.mapper.DiscountProductMapper">
 
     <resultMap id="DiscountProductMap" type="com.example.mall.entity.vo.DiscountProductVo">
+        <result column="product_id" property="productId" jdbcType="INTEGER"/>
         <result column="product_name" property="productName" jdbcType="VARCHAR"/>
         <result column="product_price" property="productPrice" jdbcType="INTEGER"/>
         <result column="product_picture" property="productPicture" jdbcType="VARCHAR"/>
+        <result column="discount_stock" property="discountStock" jdbcType="INTEGER"/>
+        <result column="discount_price" property="discountPrice" jdbcType="BIGINT"/>
         <result column="start_time" property="startTime" jdbcType="BIGINT"/>
         <result column="end_time" property="endTime" jdbcType="BIGINT"/>
     </resultMap>
@@ -17,7 +20,9 @@
     </update>
     
     <select id="getDiscountProductVos" resultMap="DiscountProductMap">
-        SELECT discount_time.start_time, discount_time.end_time, discount_product.*, product.product_name, product.product_price, product.product_picture
+        SELECT discount_time.start_time, discount_time.end_time,
+        discount_product.product_id,discount_product.discount_price,discount_product.discount_price,
+        product.product_name, product.product_price, product.product_picture
         FROM discount_product ,product, discount_time
         WHERE discount_product.time_id = discount_time.time_id
         AND discount_product.product_id = product.product_id
@@ -26,10 +31,18 @@
     </select>
 
     <select id="getDiscount" resultMap="DiscountProductMap">
-        SELECT discount_time.start_time, discount_time.end_time, discount_time.*, product.product_name, product.product_price, product.product_picture
+        SELECT discount_time.start_time, discount_time.end_time,
+        discount_product.product_id,discount_product.discount_price,discount_product.discount_price,
+        product.product_name, product.product_price, product.product_picture
         FROM discount_product ,product, discount_time
         WHERE discount_product.time_id = discount_time.time_id
         AND discount_product.product_id = product.product_id
         AND discount_product.discount_id = #{discountId}
+    </select>
+
+    <select id="getId" resultType="java.lang.Integer">
+        SELECT discount_product.discount_id
+        FROM discount_product
+        WHERE discount_product.product_id = #{product_id}
     </select>
 </mapper>

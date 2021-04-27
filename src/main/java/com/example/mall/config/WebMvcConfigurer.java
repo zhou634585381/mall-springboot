@@ -1,9 +1,13 @@
 package com.example.mall.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+/**
+ * @author ZY
+ */
 @Configuration
 public class WebMvcConfigurer extends WebMvcConfigurationSupport {
 
@@ -22,4 +26,11 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
                 "classpath:/META-INF/resources/webjars/");
         super.addResourceHandlers(registry);
     }
+
+//    @Override
+//    protected void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**").allowedOrigins()
+//                .allowCredentials(true).allowedMethods("*").maxAge(3600);
+//    }
+
 }

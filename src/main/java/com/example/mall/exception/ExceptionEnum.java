@@ -57,6 +57,10 @@ public enum ExceptionEnum {
     GET_DISCOUNT_IS_OVER(002, "秒杀商品售罄"),
     GET_DISCOUNT_IS_REUSE(002, "秒杀重复"),
     GET_DISCOUNT_IS_NOT_START(002, "秒杀尚未开始"),
+
+    ADD_USERINFO_ERROR(002,"添加地址失败"),
+    UPDATE_USERINFO_ERROR(002,"修改地址失败"),
+    DELETE_USERINFO_ERROR(002,"删除失败")
     ;
     private int code;
     private String msg;

@@ -19,6 +19,12 @@ public class DiscountProductVo extends DiscountProduct implements Serializable {
 
     private String productPicture;
 
+    private Integer productId;
+
+    private Double discountPrice;
+
+    private Integer discountStock;
+
     private Long startTime;
 
     private Long endTime;

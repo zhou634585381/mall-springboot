@@ -43,4 +43,6 @@ public interface DiscountProductMapper extends BaseMapper<DiscountProduct> {
 
     @Delete("delete from discount_product")
     void deleteAll();
+
+    Integer getId(Integer productId);
 }

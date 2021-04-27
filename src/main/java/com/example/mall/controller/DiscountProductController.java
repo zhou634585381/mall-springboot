@@ -1,8 +1,8 @@
 package com.example.mall.controller;
 
-
 import com.example.mall.entity.DiscountProduct;
 import com.example.mall.entity.DiscountTime;
+import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.DiscountProductVo;
 import com.example.mall.service.impl.DiscountProductServiceImpl;
 import com.example.mall.utils.ResultMessage;
@@ -35,10 +35,10 @@ public class DiscountProductController {
 
 
     @ApiOperation(value = "根据时间id获取对应时间的秒杀商品列表")
-    @GetMapping("/getProduct")
-    public ResultMessage getProduct(Integer timeId) {
-        List<DiscountProductVo> seckillProductVos = discountProductService.getProduct(timeId);
-        resultMessage.success("001", seckillProductVos);
+    @GetMapping("/getProduct/{timeId}")
+    public ResultMessage getProduct(@PathVariable Integer timeId) {
+        List<DiscountProductVo> discountProductVos = discountProductService.getProduct(timeId);
+        resultMessage.success("001", discountProductVos);
         return resultMessage;
     }
 
@@ -60,12 +60,22 @@ public class DiscountProductController {
         return resultMessage;
     }
 
-
     @ApiOperation(value = "获取打折商品")
     @GetMapping("/getDiscount/{discountId}")
     public ResultMessage getDiscount(@PathVariable Integer discountId) {
         DiscountProductVo discountProductVo = discountProductService.getDiscount(discountId);
         resultMessage.success("001", discountProductVo);
+        return resultMessage;
+    }
+    @GetMapping("/addShoppingCart/{productId}/{userId}")
+    @ApiOperation(value = "添加购物车")
+    public ResultMessage addShoppingCart(@PathVariable Integer productId,@PathVariable Integer userId) {
+        CartVo cartVo = discountProductService.addCart(productId, userId);
+        if (cartVo != null) {
+            resultMessage.success("001", "添加购物车成功", cartVo);
+        }else {
+            resultMessage.success("002", "该商品已经在购物车，数量+1");
+        }
         return resultMessage;
     }
 

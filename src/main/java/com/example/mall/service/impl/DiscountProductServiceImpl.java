@@ -3,11 +3,16 @@ package com.example.mall.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mall.entity.DiscountProduct;
 import com.example.mall.entity.DiscountTime;
+import com.example.mall.entity.Product;
+import com.example.mall.entity.ShoppingCart;
+import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.DiscountProductVo;
 import com.example.mall.exception.ExceptionEnum;
 import com.example.mall.exception.MallException;
 import com.example.mall.mapper.DiscountProductMapper;
 import com.example.mall.mapper.DiscountTimeMapper;
+import com.example.mall.mapper.ProductMapper;
+import com.example.mall.mapper.ShoppingCartMapper;
 import com.example.mall.service.IDiscountProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mall.utils.BeanUtil;
@@ -21,7 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.*;
@@ -46,6 +51,10 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private DiscountProductMapper discountProductMapper;
+    @Autowired
+    private ShoppingCartMapper shoppingCartMapper;
+    @Autowired
+    private ProductMapper productMapper;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -74,7 +83,7 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
     public void addDiscountProduct(DiscountProduct discountProduct){
         Date time = getDate();
         Long startTime = time.getTime()/1000*1000 + 1000 * 60 * 60;
-        Long endTime = startTime + 1000 * 60 * 60;
+        Long endTime = startTime + 100000 * 60 * 60;
         DiscountTime discountTime = new DiscountTime();
         discountTime.setStartTime(startTime);
         discountTime.setEndTime(endTime);
@@ -134,6 +143,48 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
             return discountProductVo;
         }
         return null;
+    }
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public CartVo addCart(Integer productId, Integer userId){
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setProductId(productId);
+        shoppingCart.setUserId(userId);
+        QueryWrapper<ShoppingCart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("product_id",productId).eq("user_id",userId);
+        // 查看数据库是否已存在,存在数量直接加1
+        ShoppingCart cart = shoppingCartMapper.selectOne(queryWrapper);
+        if (cart != null) {
+            // 还要判断是否达到该商品规定上限
+            if (cart.getNum() >= 5) {
+                throw new MallException(ExceptionEnum.ADD_CART_NUM_UPPER);
+            }
+            cart.setNum(cart.getNum() + 1);
+            shoppingCartMapper.update(cart,queryWrapper);
+            return null;
+        }else {
+            // 不存在
+            shoppingCart.setNum(1);
+            shoppingCartMapper.insert(shoppingCart);
+            return getCartVo(shoppingCart);
+        }
+    }
+
+    private CartVo getCartVo(ShoppingCart cart) {
+        // 获取商品，用于封装下面的类
+        Integer discountId = discountProductMapper.getId(cart.getProductId());
+        DiscountProductVo discountProductVo = discountProductMapper.getDiscount(discountId);
+        // 返回购物车详情
+        CartVo cartVo = new CartVo();
+        cartVo.setId(cart.getId());
+        cartVo.setProductId(cart.getProductId());
+        cartVo.setProductName(discountProductVo.getProductName());
+        cartVo.setProductImg(discountProductVo.getProductPicture());
+        cartVo.setPrice(discountProductVo.getDiscountPrice());
+        cartVo.setNum(cart.getNum());
+        cartVo.setMaxNum(5);
+        cartVo.setCheck(false);
+        return cartVo;
     }
 
     @Override

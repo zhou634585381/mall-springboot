@@ -3,6 +3,7 @@ package com.example.mall.service;
 import com.example.mall.entity.DiscountProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mall.entity.DiscountTime;
+import com.example.mall.entity.vo.CartVo;
 import com.example.mall.entity.vo.DiscountProductVo;
 
 import java.util.List;
@@ -49,4 +50,6 @@ public interface IDiscountProductService extends IService<DiscountProduct> {
      * @param userId
      */
     void discountProduct(String discountId,Integer userId);
+
+    CartVo addCart(Integer productId, Integer userId);
 }

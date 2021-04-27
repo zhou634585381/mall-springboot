@@ -115,7 +115,7 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     public void deleteCart(Integer cartId, Integer userId){
         try {
             QueryWrapper<ShoppingCart> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("cart_id",cartId).eq("user_id",userId);
+            queryWrapper.eq("id",cartId).eq("user_id",userId);
             shoppingCartMapper.delete(queryWrapper);
         } catch (Exception e) {
             e.printStackTrace();
