@@ -3,6 +3,7 @@
 <mapper namespace="com.example.mall.mapper.DiscountProductMapper">
 
     <resultMap id="DiscountProductMap" type="com.example.mall.entity.vo.DiscountProductVo">
+        <result column="discount_id" property="discountId" jdbcType="INTEGER"/>
         <result column="product_id" property="productId" jdbcType="INTEGER"/>
         <result column="product_name" property="productName" jdbcType="VARCHAR"/>
         <result column="product_price" property="productPrice" jdbcType="INTEGER"/>
@@ -18,9 +19,9 @@
     WHERE discount_id = #{discountId}
     AND discount_stock > 0
     </update>
-    
+
     <select id="getDiscountProductVos" resultMap="DiscountProductMap">
-        SELECT discount_time.start_time, discount_time.end_time,
+        SELECT discount_product.discount_id,discount_time.start_time, discount_time.end_time,
         discount_product.product_id,discount_product.discount_price,discount_product.discount_price,
         product.product_name, product.product_price, product.product_picture
         FROM discount_product ,product, discount_time

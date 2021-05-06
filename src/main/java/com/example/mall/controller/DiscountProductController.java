@@ -62,26 +62,15 @@ public class DiscountProductController {
 
     @ApiOperation(value = "获取打折商品")
     @GetMapping("/getDiscount/{discountId}")
-    public ResultMessage getDiscount(@PathVariable Integer discountId) {
+    public ResultMessage getDiscount(@PathVariable String discountId) {
         DiscountProductVo discountProductVo = discountProductService.getDiscount(discountId);
         resultMessage.success("001", discountProductVo);
         return resultMessage;
     }
-    @GetMapping("/addShoppingCart/{productId}/{userId}")
-    @ApiOperation(value = "添加购物车")
-    public ResultMessage addShoppingCart(@PathVariable Integer productId,@PathVariable Integer userId) {
-        CartVo cartVo = discountProductService.addCart(productId, userId);
-        if (cartVo != null) {
-            resultMessage.success("001", "添加购物车成功", cartVo);
-        }else {
-            resultMessage.success("002", "该商品已经在购物车，数量+1");
-        }
-        return resultMessage;
-    }
 
     @ApiOperation(value = "开始打折")
-    @PostMapping("/discountProduct")
-    public ResultMessage discountProduct(String discountId, @CookieValue("XM_TOKEN") String cookie) {
+    @PostMapping("/discountProduct/{discountId}")
+    public ResultMessage discountProduct(@PathVariable String discountId, @CookieValue("XM_TOKEN") String cookie) {
         // 先判断cookie是否存在，和redis校验
         Integer userId = (Integer) redisTemplate.opsForHash().get(cookie, "userId");
         discountProductService.discountProduct(discountId, userId);

@@ -82,8 +82,8 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
     @Override
     public void addDiscountProduct(DiscountProduct discountProduct){
         Date time = getDate();
-        Long startTime = time.getTime()/1000*1000 + 1000 * 60 * 60;
-        Long endTime = startTime + 100000 * 60 * 60;
+        Long startTime = time.getTime()/1000*1000 + 100 * 60 * 60;
+        Long endTime = startTime + 10000 * 60 * 60;
         DiscountTime discountTime = new DiscountTime();
         discountTime.setStartTime(startTime);
         discountTime.setEndTime(endTime);
@@ -116,7 +116,7 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
     }
 
     @Override
-    public DiscountProductVo getDiscount(Integer discountId){
+    public DiscountProductVo getDiscount(String discountId){
         Map map = redisTemplate.opsForHash().entries(RedisKey.DISCOUNT_PRODUCT + discountId);
         if (!map.isEmpty()){
             map.size();
@@ -144,48 +144,7 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
         }
         return null;
     }
-    @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public CartVo addCart(Integer productId, Integer userId){
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setProductId(productId);
-        shoppingCart.setUserId(userId);
-        QueryWrapper<ShoppingCart> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("product_id",productId).eq("user_id",userId);
-        // 查看数据库是否已存在,存在数量直接加1
-        ShoppingCart cart = shoppingCartMapper.selectOne(queryWrapper);
-        if (cart != null) {
-            // 还要判断是否达到该商品规定上限
-            if (cart.getNum() >= 5) {
-                throw new MallException(ExceptionEnum.ADD_CART_NUM_UPPER);
-            }
-            cart.setNum(cart.getNum() + 1);
-            shoppingCartMapper.update(cart,queryWrapper);
-            return null;
-        }else {
-            // 不存在
-            shoppingCart.setNum(1);
-            shoppingCartMapper.insert(shoppingCart);
-            return getCartVo(shoppingCart);
-        }
-    }
 
-    private CartVo getCartVo(ShoppingCart cart) {
-        // 获取商品，用于封装下面的类
-        Integer discountId = discountProductMapper.getId(cart.getProductId());
-        DiscountProductVo discountProductVo = discountProductMapper.getDiscount(discountId);
-        // 返回购物车详情
-        CartVo cartVo = new CartVo();
-        cartVo.setId(cart.getId());
-        cartVo.setProductId(cart.getProductId());
-        cartVo.setProductName(discountProductVo.getProductName());
-        cartVo.setProductImg(discountProductVo.getProductPicture());
-        cartVo.setPrice(discountProductVo.getDiscountPrice());
-        cartVo.setNum(cart.getNum());
-        cartVo.setMaxNum(5);
-        cartVo.setCheck(false);
-        return cartVo;
-    }
 
     @Override
     public void discountProduct(String discountId,Integer userId){
@@ -209,22 +168,19 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
                 throw new MallException(ExceptionEnum.GET_DISCOUNT_IS_NOT_START);
             }
         }
-
         // 判断是否已经秒杀到了，避免一个账户秒杀多个商品
         List<String> list = redisTemplate.opsForList().range(RedisKey.DISCOUNT_PRODUCT_USER_LIST + discountId, 0, -1);
         if (list.contains(String.valueOf(userId))) {
             throw new MallException(ExceptionEnum.GET_DISCOUNT_IS_REUSE);
         }
-
         // 预减库存：从缓存中减去库存
         // 利用redis中的方法，减去库存，返回值为减去1之后的值
-        if (stringRedisTemplate.opsForValue().decrement(RedisKey.DISCOUNT_PRODUCT_STOCK + discountId) < 0) {
-            // 设置内存标记
-            localOverMap.put(discountId, true);
-            // 秒杀完成，库存为空
-            throw new MallException(ExceptionEnum.GET_DISCOUNT_IS_OVER);
-        }
-
+//        if (stringRedisTemplate.opsForValue().decrement(RedisKey.DISCOUNT_PRODUCT_STOCK + discountId) < 0) {
+//            // 设置内存标记
+//            localOverMap.put(discountId, true);
+//            // 秒杀完成，库存为空
+//            throw new MallException(ExceptionEnum.GET_DISCOUNT_IS_OVER);
+//        }
         // 使用RabbitMQ异步传输
         mqSend(discountId, userId);
     }
@@ -244,7 +200,7 @@ public class DiscountProductServiceImpl extends ServiceImpl<DiscountProductMappe
             stringRedisTemplate.opsForValue().increment(RedisKey.DISCOUNT_PRODUCT_STOCK + discountId);
         }
     }
-    public Long getEndTime(Integer discountId) {
+    public Long getEndTime(String discountId) {
         DiscountProductVo discountProductVo = discountProductMapper.getDiscount(discountId);
         return discountTimeMapper.getEndTime(discountProductVo.getTimeId());
     }

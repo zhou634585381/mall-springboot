@@ -71,6 +71,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return list;
 
     }
+    @Override
+    public void addProduct(Product product){
+        int flag = productMapper.insert(product);
+        if(flag <= 0){
+            throw new MallException(ExceptionEnum.ADD_PRODUCT_ERROR);
+        }
+
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)

@@ -39,7 +39,7 @@ public interface DiscountProductMapper extends BaseMapper<DiscountProduct> {
      * @param discountId
      * @return
      */
-    DiscountProductVo getDiscount(Integer discountId);
+    DiscountProductVo getDiscount(String discountId);
 
     @Delete("delete from discount_product")
     void deleteAll();

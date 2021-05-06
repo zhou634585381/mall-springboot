@@ -13,6 +13,8 @@ import java.util.List;
 @Data
 public class DiscountProductVo extends DiscountProduct implements Serializable {
 
+    private Integer discountId;
+
     private String productName;
 
     private Double productPrice;

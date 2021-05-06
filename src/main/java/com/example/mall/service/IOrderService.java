@@ -35,5 +35,5 @@ public interface IOrderService extends IService<Orders> {
      * @param discountId
      * @param userId
      */
-    void addDiscountOrder(Integer discountId, Integer userId);
+    void addDiscountOrder(String discountId, String userId);
 }

@@ -70,7 +70,6 @@ public class OrderServiceImpl extends ServiceImpl<OrdersMapper, Orders> implemen
                 throw new MallException(ExceptionEnum.ADD_ORDER_ERROR);
             }
             // 减去商品库存,记录卖出商品数量
-            // TODO : 此处会产生多线程问题，即不同用户同时对这个商品操作，此时会导致数量不一致问题
             Product product = productMapper.selectById(cartVo.getProductId());
             product.setProductNum(product.getProductNum() - cartVo.getNum());
             product.setProductSales(product.getProductSales() + cartVo.getNum());
@@ -113,12 +112,12 @@ public class OrderServiceImpl extends ServiceImpl<OrdersMapper, Orders> implemen
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void addDiscountOrder(Integer discountId, Integer userId){
+    public void addDiscountOrder(String discountId, String userId){
         // 订单id
         String orderId = idWorker.nextId() + "";
         // 商品id
         DiscountProduct discountProduct = new DiscountProduct();
-        discountProduct.setDiscountId(discountId);
+        discountProduct.setDiscountId(Integer.parseInt(discountId));
         QueryWrapper<DiscountProduct> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("discount_id",discountId);
         DiscountProduct one = discountProductMapper.selectOne(queryWrapper);
@@ -131,7 +130,7 @@ public class OrderServiceImpl extends ServiceImpl<OrdersMapper, Orders> implemen
         order.setOrderId(orderId);
         order.setProductId(productId);
         order.setProductNum(1);
-        order.setUserId(userId);
+        order.setUserId(Integer.parseInt(userId));
         order.setOrderTime(System.currentTimeMillis());
         order.setProductPrice(price);
 

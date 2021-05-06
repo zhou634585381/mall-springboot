@@ -35,6 +35,8 @@ public interface IProductService extends IService<Product> {
      */
     Product getProductById(Integer productId);
 
+    void addProduct(Product product);
+
     /**
      * 分页获取商品信息
      * @param pageNum

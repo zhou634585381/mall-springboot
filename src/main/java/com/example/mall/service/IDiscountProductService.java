@@ -42,7 +42,7 @@ public interface IDiscountProductService extends IService<DiscountProduct> {
      * @param discountId
      * @return
      */
-    DiscountProductVo getDiscount(Integer discountId);
+    DiscountProductVo getDiscount(String discountId);
 
     /**
      * 开始打折
@@ -51,5 +51,4 @@ public interface IDiscountProductService extends IService<DiscountProduct> {
      */
     void discountProduct(String discountId,Integer userId);
 
-    CartVo addCart(Integer productId, Integer userId);
 }

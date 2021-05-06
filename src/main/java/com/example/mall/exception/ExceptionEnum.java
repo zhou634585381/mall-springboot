@@ -47,6 +47,7 @@ public enum ExceptionEnum {
     ADD_CART_NUM_UPPER(003, "该商品购物车达到上限"),
     UPDATE_CART_ERROR(003, "商品数量修改失败"),
     DELETE_CART_ERROR(003, "商品删除失败"),
+    ADD_PRODUCT_ERROR(003,"商品添加失败"),
 
 
     ADD_ORDER_ERROR(002, "生成订单失败"),

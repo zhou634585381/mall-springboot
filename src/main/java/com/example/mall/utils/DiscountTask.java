@@ -36,7 +36,7 @@ public class DiscountTask {
 
             // 插入时间
             long startTime = time.getTime()/1000*1000 + 1000 * 60 * 60 * i;
-            long endTime = startTime + 1000 * 60 * 60;
+            long endTime = startTime + 10000 * 60 * 60;
             DiscountTime discountTime = new DiscountTime();
             discountTime.setStartTime(startTime);
             discountTime.setEndTime(endTime);
@@ -63,11 +63,7 @@ public class DiscountTask {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("完成---------------------");
-
         }
-        System.out.println("一次添加ok-------------------------------------------");
-
     }
 
     private Date getDate() {

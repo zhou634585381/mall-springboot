@@ -53,6 +53,15 @@ public class ProductController {
 
     }
 
+    @PostMapping("/addProduct")
+    @ApiOperation(value = "添加商品")
+    public ResultMessage addProduct(Product product) {
+        productService.addProduct(product);
+        resultMessage.success("001", "添加成功");
+        return resultMessage;
+
+    }
+
     @GetMapping("/getProduct/{productId}")
     @ApiOperation(value = "获取某个商品具体信息")
     public ResultMessage getProduct(@PathVariable Integer productId) {

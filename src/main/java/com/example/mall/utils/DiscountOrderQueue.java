@@ -35,8 +35,8 @@ public class DiscountOrderQueue {
             // redis中存在，表明此条消息已消费，请勿重复消费
             return;
         }
-        Integer discountId = (Integer) map.get("discountId");
-        Integer userId = (Integer) map.get("userId");
+        String discountId = (String) map.get("discountId");
+        String userId =(String) map.get("userId");
         // 存入redis，因为只需要判断是否存在，因此value为多少无所谓
         stringRedisTemplate.opsForValue().set(RedisKey.DISCOUNT_RABBITMQ_ID + correlationId, "1");
         Long seckillEndTime = discountProductService.getEndTime(discountId);
